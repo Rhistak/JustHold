@@ -5,7 +5,7 @@
       enter-active-class="animated fadeInDown"
       leave-active-class="animated slideOutUp"
     >
-      <q-form @submit="addCurrency" v-if="show" key="QForm">
+      <q-form @submit="addCurrency" v-if="show" key="QForm" class="q-mb-md">
         <q-select
           filled
           v-model="crypto"
@@ -55,50 +55,66 @@
           ]"
         />
         <div style="display: flex;flex-direction: column-reverse;">
-          <q-btn label="ADD" type="submit" class="right" color="primary" />
+          <q-btn
+            label="ADD"
+            type="submit"
+            http-equiv="refresh"
+            class="right"
+            style="background-color:#93329e;color:white"
+          />
         </div>
       </q-form>
     </transition-group>
-
-    <div
-      v-for="currency in currencies"
-      :key="currency.id"
-      style="max-width: 400px"
-    >
-      <q-list separator class="q-ma-md">
-        <q-item style="background-color:#6e7c7c" class="rounded-borders">
-          <div v-ripple v-for="coin in coins" :key="coin.id">
+    <q-list v-for="s in someCurrencies" :key="s.id">
+      <div v-for="coin in coins" :key="coin.id">
+        <q-item
+          style="background-color:#e84545;color:white"
+          class="rounded-borders"
+          v-if="coin.name.toUpperCase() == s.name.toUpperCase()"
+        >
+          <q-item-section>{{ s.name }} </q-item-section>
+          <q-item-section class="absolute-right q-mr-md">
+              ${{ coin.current_price }}
+          </q-item-section>
+        </q-item>
+      </div>
+      <q-list v-for="c in currencies" :key="c.id" separator class="q-ma-md">
+        <q-item
+          style="background-color:#6e7c7c"
+          class="rounded-borders"
+          v-if="c.name == s.name"
+        >
+          <div v-for="coin in coins" :key="coin.id">
             <q-item-section
-              v-if="coin.name.toUpperCase() == currency.crypto.toUpperCase()"
+              v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
             >
               <q-item-label style="color:#ffffff;font-size:large"
-                >{{ currency.crypto }}
+                >{{ c.name }}
               </q-item-label>
               <q-item-label overline style="color:#f2edd7">{{
-                currency.amount
-              }}</q-item-label>
-            </q-item-section>
+                c.amount
+              }}</q-item-label></q-item-section
+            >
+
             <q-item-section
               class="absolute-right q-mr-md"
-              v-if="coin.name.toUpperCase() == currency.crypto.toUpperCase()"
+              v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
             >
-            <div v-if="(currency.amount *(coin.current_price - currency.price) > 0)">
-              <q-item-label overline style="color:#9ede73;font-size:large" >
-               ${{(currency.amount *(coin.current_price - currency.price)).toFixed(2)}}
-                </q-item-label
-              >
-            </div>
-            <div v-else>
-              <q-item-label overline style="color:#ff7171;font-size:large">
-                ${{(currency.amount *(coin.current_price - currency.price)).toFixed(2)}}
-              </q-item-label>
-            </div>
+              <div v-if="c.amount * (coin.current_price - c.price) > 0">
+                <q-item-label overline style="color:#9ede73;font-size:large">
+                  ${{ (c.amount * (coin.current_price - c.price)).toFixed(2) }}
+                </q-item-label>
+              </div>
+              <div v-else>
+                <q-item-label overline style="color:#ff7171;font-size:large">
+                  ${{ (c.amount * (coin.current_price - c.price)).toFixed(2) }}
+                </q-item-label>
+              </div>
             </q-item-section>
           </div>
         </q-item>
       </q-list>
-    </div>
-
+    </q-list>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="primary" v-on:click="show = !show" />
     </q-page-sticky>
@@ -109,6 +125,7 @@
 import Localbase from "localbase";
 import axios from "axios";
 let db = new Localbase("db");
+let _ = require("lodash");
 
 export default {
   data() {
@@ -129,9 +146,7 @@ export default {
       keyWord: [],
       //coins data
       coins: [],
-      coinData: [],
-      //test
-      condition: false
+      coinData: []
     };
   },
   methods: {
@@ -141,7 +156,6 @@ export default {
           "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h"
         )
         .then(response => {
-          // this.options = response.data.filter(e => (e.name).toLowerCase() == this.crypto);
           this.options = response.data.map(e => e.name);
           this.coins = response.data;
           console.log("api call");
@@ -150,36 +164,27 @@ export default {
     addCurrency() {
       let newCurrency = {
         id: Date.now(),
-        crypto: this.crypto,
+        name: this.crypto,
         amount: this.amount,
         price: this.price
       };
       db.collection("Currencies").add(newCurrency);
-      this.currencies.push(newCurrency);
+        this.currencies.push(newCurrency);
+        const seen = new Set();
+          this.someCurrencies = this.currencies.filter(el => {
+            const duplicate = seen.has(el.name);
+            seen.add(el.name);
+            return !duplicate;
+          });
+
+          console.log(this.someCurrencies);
     },
     getCurrencys() {
       db.collection("Currencies")
+        .orderBy("name", "desc")
         .get()
         .then(currency => {
-          const seen = new Set();
-          this.currencies = currency.filter(el => {
-            const duplicate = seen.has(el.crypto);
-            seen.add(el.crypto);
-            return !duplicate;
-          });
-        });
-    },
-    getDuplicated() {
-      db.collection("Currencies")
-        .get()
-        .then(currency => {
-          const someSeen = new Set();
-          this.someCurrencies = currency.filter(el => {
-            const duplicate = someSeen.has(el.crypto);
-            someSeen.add(el.crypto);
-            return duplicate;
-          });
-          console.log(this.someCurrencies);
+          this.currencies = currency;
         });
     },
     filterFn(val, update, abort) {
@@ -194,15 +199,22 @@ export default {
       setInterval(() => {
         this.getCoinsData();
       }, 30000);
-    },
+    }
   },
   created() {
-    this.getDuplicated();
+    // this.getDuplicated();
     this.getCurrencys();
     this.startInterval();
+    this.currencies
+    this.someCurrencies
   },
   mounted() {
+    this.getCurrencys();
     this.getCoinsData();
+
+  },
+  updated() {
+ 
   },
   name: "PageIndex"
 };
