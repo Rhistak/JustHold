@@ -5,11 +5,12 @@
       enter-active-class="animated fadeInDown"
       leave-active-class="animated slideOutUp"
     >
+      <!-- FORM -->
       <q-form @submit="addCurrency" v-if="show" key="QForm" class="q-mb-md">
         <q-select
           filled
           v-model="crypto"
-          label="Crypto"
+          label="Select Crypto"
           use-input
           hide-selected
           fill-input
@@ -34,7 +35,7 @@
           filled
           type="number"
           v-model="amount"
-          label="Amount"
+          label="Select Amount"
           label-color="white"
           bg-color="accent"
           lazy-rules
@@ -46,7 +47,7 @@
           filled
           type="float"
           v-model="price"
-          label="Buy price"
+          label="Buy Price"
           label-color="white"
           bg-color="accent"
           lazy-rules
@@ -58,32 +59,37 @@
           <q-btn
             label="ADD"
             type="submit"
-            http-equiv="refresh"
             class="right"
-            style="background-color:#93329e;color:white"
+            style="background-color:#e84545;color:#ececec"
           />
         </div>
       </q-form>
     </transition-group>
+    <!-- FORM -->
     <q-list v-for="s in someCurrencies" :key="s.id">
       <div v-for="coin in coins" :key="coin.id">
+        <!-- ITEM HEADER -->
         <q-item
-          style="background-color:#e84545;color:white"
+          style="background-color:#4b5d67;color:white"
           class="rounded-borders"
           v-if="coin.name.toUpperCase() == s.name.toUpperCase()"
         >
+          <!-- ITEM HEADER -->
           <q-item-section>{{ s.name }} </q-item-section>
           <q-item-section class="absolute-right q-mr-md">
-              ${{ coin.current_price }}
+            ${{ coin.current_price }}
           </q-item-section>
         </q-item>
       </div>
+
       <q-list v-for="c in currencies" :key="c.id" separator class="q-ma-md">
+        <!-- ITEM  -->
         <q-item
-          style="background-color:#6e7c7c"
+          style="background-color:#5d7290"
           class="rounded-borders"
           v-if="c.name == s.name"
         >
+          <!-- ITEM  -->
           <div v-for="coin in coins" :key="coin.id">
             <q-item-section
               v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
@@ -169,15 +175,17 @@ export default {
         price: this.price
       };
       db.collection("Currencies").add(newCurrency);
-        this.currencies.push(newCurrency);
-        const seen = new Set();
-          this.someCurrencies = this.currencies.filter(el => {
-            const duplicate = seen.has(el.name);
-            seen.add(el.name);
-            return !duplicate;
-          });
-
-          console.log(this.someCurrencies);
+      this.currencies.push(newCurrency);
+      const seen = new Set();
+      this.someCurrencies = this.currencies.filter(el => {
+        const duplicate = seen.has(el.name);
+        seen.add(el.name);
+        return !duplicate;
+      });
+      this.show = false;
+      this.crypto = "";
+      this.price = "";
+      this.amount = "";
     },
     getCurrencys() {
       db.collection("Currencies")
@@ -185,6 +193,12 @@ export default {
         .get()
         .then(currency => {
           this.currencies = currency;
+          const seen = new Set();
+          this.someCurrencies = this.currencies.filter(el => {
+            const duplicate = seen.has(el.name);
+            seen.add(el.name);
+            return !duplicate;
+          });
         });
     },
     filterFn(val, update, abort) {
@@ -205,17 +219,12 @@ export default {
     // this.getDuplicated();
     this.getCurrencys();
     this.startInterval();
-    this.currencies
-    this.someCurrencies
   },
   mounted() {
     this.getCurrencys();
     this.getCoinsData();
-
   },
-  updated() {
- 
-  },
+  updated() {},
   name: "PageIndex"
 };
 </script>
