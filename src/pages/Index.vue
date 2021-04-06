@@ -66,22 +66,24 @@
       </q-form>
     </transition-group>
     <!-- FORM -->
+
     <q-list v-for="s in someCurrencies" :key="s.id">
       <div v-for="coin in coins" :key="coin.id">
         <!-- ITEM HEADER -->
+
         <q-item
           style="background-color:#4b5d67;color:white"
           class="rounded-borders"
           v-if="coin.name.toUpperCase() == s.name.toUpperCase()"
         >
           <!-- ITEM HEADER -->
+
           <q-item-section>{{ s.name }} </q-item-section>
           <q-item-section class="absolute-right q-mr-md">
             ${{ coin.current_price }}
           </q-item-section>
         </q-item>
       </div>
-
       <q-list v-for="c in currencies" :key="c.id" separator class="q-ma-md">
         <!-- ITEM  -->
         <q-item
@@ -91,17 +93,34 @@
         >
           <!-- ITEM  -->
           <div v-for="coin in coins" :key="coin.id">
+            <!-- DELETE BUTTON -->
+            <q-item-section
+              v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
+              class="absolute-left"
+            >
+              <q-item-label>
+                <q-btn
+                  size="6px"
+                  round
+                  icon="clear"
+                  color="dark"
+                  style="top:-7px;left:-7px;position:absolute;display:none"
+                  @click.stop="deleteCurrency(c.id)"
+                />
+              </q-item-label>
+            </q-item-section>
+            <!-- COIN NAME AND AMOUNT -->
             <q-item-section
               v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
             >
-              <q-item-label style="color:#ffffff;font-size:large"
-                >{{ c.name }}
+              <q-item-label style="color:#ffffff;font-size:large">
+                {{ c.name }}
               </q-item-label>
-              <q-item-label overline style="color:#f2edd7">{{
-                c.amount
-              }}</q-item-label></q-item-section
-            >
-
+              <q-item-label overline style="color:#f2edd7">
+                {{ c.amount }}
+              </q-item-label>
+            </q-item-section>
+            <!-- COIN PRICE -->
             <q-item-section
               class="absolute-right q-mr-md"
               v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
@@ -121,6 +140,8 @@
         </q-item>
       </q-list>
     </q-list>
+
+    <!-- FUNCTION BUTTON -->
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="primary" v-on:click="show = !show" />
     </q-page-sticky>
@@ -212,7 +233,14 @@ export default {
     startInterval: function() {
       setInterval(() => {
         this.getCoinsData();
-      }, 30000);
+      }, 10000);
+    },
+    deleteCurrency(id) {
+      let index = this.currencies.find(c => c.id === id);
+      db.collection("Currencies")
+        .doc({ id: id })
+        .delete();
+      this.currencies.splice(index, 1);
     }
   },
   created() {
