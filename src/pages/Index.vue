@@ -74,11 +74,14 @@
         <q-item
           style="background-color:#4b5d67;color:white"
           class="rounded-borders"
-          v-if="coin.name.toUpperCase() == s.name.toUpperCase()"
+          v-if="coin.name.toLowerCase() == s.name.toLowerCase()"
         >
+          <!-- v-if="coin.name.toLowerCase() == s.name.toLowerCase()" -->
           <!-- ITEM HEADER -->
 
-          <q-item-section>{{ s.name }} </q-item-section>
+          <q-item-section v-if="s.name.toLowerCase() == coin.name.toLowerCase()"
+            >{{ s.name }}
+          </q-item-section>
           <q-item-section class="absolute-right q-mr-md">
             ${{ coin.current_price }}
           </q-item-section>
@@ -95,9 +98,10 @@
           <div v-for="coin in coins" :key="coin.id">
             <!-- DELETE BUTTON -->
             <q-item-section
-              v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
               class="absolute-left"
+              v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
             >
+              <!-- v-if="coin.name.toLowerCase() == c.name.toLowerCase()" -->
               <q-item-label>
                 <q-btn
                   size="6px"
@@ -111,8 +115,10 @@
             </q-item-section>
             <!-- COIN NAME AND AMOUNT -->
             <q-item-section
-              v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
+              style="margin:0"
+              v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
             >
+              <!-- v-if="coin.name.toLowerCase() == c.name.toLowerCase()" -->
               <q-item-label style="color:#ffffff;font-size:large">
                 {{ c.name }}
               </q-item-label>
@@ -123,8 +129,9 @@
             <!-- COIN PRICE -->
             <q-item-section
               class="absolute-right q-mr-md"
-              v-if="coin.name.toUpperCase() == c.name.toUpperCase()"
+              v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
             >
+              <!-- v-if="coin.name.toLowerCase() == c.name.toLowerCase()" -->
               <div v-if="c.amount * (coin.current_price - c.price) > 0">
                 <q-item-label overline style="color:#9ede73;font-size:large">
                   ${{ (c.amount * (coin.current_price - c.price)).toFixed(2) }}
@@ -140,7 +147,6 @@
         </q-item>
       </q-list>
     </q-list>
-
     <!-- FUNCTION BUTTON -->
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="primary" v-on:click="show = !show" />
@@ -173,7 +179,8 @@ export default {
       keyWord: [],
       //coins data
       coins: [],
-      coinData: []
+      dataCoins: [],
+      rasen: []
     };
   },
   methods: {
@@ -184,7 +191,15 @@ export default {
         )
         .then(response => {
           this.options = response.data.map(e => e.name);
-          this.coins = response.data;
+          const seen = new Set();
+          this.someCurrencies.forEach(x => {
+            response.data.filter(e => {
+              if (e.name.toLowerCase() == x.name.toLowerCase()) {
+                seen.add(e);
+                return (this.coins = seen);
+              }
+            });
+          });
           console.log("api call");
         });
     },
@@ -203,6 +218,7 @@ export default {
         seen.add(el.name);
         return !duplicate;
       });
+      this.getCoinsData();
       this.show = false;
       this.crypto = "";
       this.price = "";
@@ -210,7 +226,6 @@ export default {
     },
     getCurrencys() {
       db.collection("Currencies")
-        .orderBy("name", "desc")
         .get()
         .then(currency => {
           this.currencies = currency;
@@ -244,7 +259,6 @@ export default {
     }
   },
   created() {
-    // this.getDuplicated();
     this.getCurrencys();
     this.startInterval();
   },
