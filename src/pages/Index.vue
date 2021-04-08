@@ -10,7 +10,7 @@
         <q-select
           filled
           v-model="crypto"
-          label="Select Crypto"
+          placeholder="Select Crypto"
           use-input
           hide-selected
           fill-input
@@ -33,10 +33,9 @@
 
         <q-input
           filled
-          type="number"
+          type="text"
           v-model="amount"
-          label="Select Amount"
-          label-color="white"
+          placeholder="Amount"
           bg-color="accent"
           lazy-rules
           :rules="[
@@ -45,9 +44,9 @@
         />
         <q-input
           filled
-          type="float"
+          type="text"
           v-model="price"
-          label="Buy Price"
+          placeholder="Buy Price"
           label-color="white"
           bg-color="accent"
           lazy-rules
@@ -65,91 +64,123 @@
         </div>
       </q-form>
     </transition-group>
-    <!-- FORM -->
-
     <q-list v-for="s in someCurrencies" :key="s.id">
       <div v-for="coin in coins" :key="coin.id">
-        <!-- ITEM HEADER -->
-
-        <q-item
-          style="background-color:#4b5d67;color:white"
-          class="rounded-borders"
+        <q-expansion-item
           v-if="coin.name.toLowerCase() == s.name.toLowerCase()"
+          :label="s.name"
+          default-opened
+          header-class="bg-secondary text-white rounded-borders"
         >
-          <!-- v-if="coin.name.toLowerCase() == s.name.toLowerCase()" -->
-          <!-- ITEM HEADER -->
-
-          <q-item-section v-if="s.name.toLowerCase() == coin.name.toLowerCase()"
-            >{{ s.name }}
-          </q-item-section>
-          <q-item-section class="absolute-right q-mr-md">
-            ${{ coin.current_price }}
-          </q-item-section>
-        </q-item>
+          <q-list v-for="c in currencies" :key="c.id" separator class="q-ma-md">
+            <!-- ITEM  -->
+            <q-item
+              style="background-color:#5d7290"
+              class="rounded-borders"
+              v-if="c.name == s.name"
+              :class="c.name"
+            >
+              <!-- ITEM  -->
+              <div v-for="coin in coins" :key="coin.id">
+                <!-- DELETE BUTTON -->
+                <q-item-section
+                  class="absolute-left"
+                  v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
+                >
+                  <q-item-label>
+                    <q-btn
+                      size="6px"
+                      round
+                      icon="clear"
+                      color="dark"
+                      style="top:-7px;left:-7px;position:absolute"
+                      v-if="deleteVisibility"
+                      @click.stop="deleteCurrency(c.id)"
+                    />
+                  </q-item-label>
+                </q-item-section>
+                <!-- COIN DATE  -->
+                <q-item-section
+                  class="absolute-left"
+                  v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
+                >
+                  <q-item-label
+                    class="q-ml-md"
+                    overline
+                    style="color:#f2edd7;font-size:large"
+                  >
+                    {{ c.id | niceDate }}
+                  </q-item-label>
+                </q-item-section>
+                <!-- COIN AMOUNT  -->
+                <q-item-section
+                  class="absolute-center"
+                  side
+                  v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
+                >
+                  <q-badge
+                    rounded
+                    color="primary"
+                    class="q-pa-sm"
+                    style="font-size:small"
+                    >{{ c.amount }}</q-badge
+                  >
+                </q-item-section>
+                <!-- COIN PRICE -->
+                <q-item-section
+                  class="absolute-right q-mr-md"
+                  v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
+                >
+                  <div v-if="c.amount * (coin.current_price - c.price) > 0">
+                    <q-item-label
+                      overline
+                      style="color:#9ede73;font-size:large"
+                    >
+                      ${{
+                        (c.amount * (coin.current_price - c.price)).toFixed(2)
+                      }}
+                    </q-item-label>
+                  </div>
+                  <div v-else>
+                    <q-item-label
+                      overline
+                      style="color:#ff7171;font-size:large"
+                    >
+                      ${{
+                        (c.amount * (coin.current_price - c.price)).toFixed(2)
+                      }}
+                    </q-item-label>
+                  </div>
+                </q-item-section>
+              </div>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
       </div>
-      <q-list v-for="c in currencies" :key="c.id" separator class="q-ma-md">
-        <!-- ITEM  -->
-        <q-item
-          style="background-color:#5d7290"
-          class="rounded-borders"
-          v-if="c.name == s.name"
-        >
-          <!-- ITEM  -->
-          <div v-for="coin in coins" :key="coin.id">
-            <!-- DELETE BUTTON -->
-            <q-item-section
-              class="absolute-left"
-              v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-            >
-              <!-- v-if="coin.name.toLowerCase() == c.name.toLowerCase()" -->
-              <q-item-label>
-                <q-btn
-                  size="6px"
-                  round
-                  icon="clear"
-                  color="dark"
-                  style="top:-7px;left:-7px;position:absolute;display:none"
-                  @click.stop="deleteCurrency(c.id)"
-                />
-              </q-item-label>
-            </q-item-section>
-            <!-- COIN NAME AND AMOUNT -->
-            <q-item-section
-              style="margin:0"
-              v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-            >
-              <!-- v-if="coin.name.toLowerCase() == c.name.toLowerCase()" -->
-              <q-item-label style="color:#ffffff;font-size:large">
-                {{ c.name }}
-              </q-item-label>
-              <q-item-label overline style="color:#f2edd7">
-                {{ c.amount }}
-              </q-item-label>
-            </q-item-section>
-            <!-- COIN PRICE -->
-            <q-item-section
-              class="absolute-right q-mr-md"
-              v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-            >
-              <!-- v-if="coin.name.toLowerCase() == c.name.toLowerCase()" -->
-              <div v-if="c.amount * (coin.current_price - c.price) > 0">
-                <q-item-label overline style="color:#9ede73;font-size:large">
-                  ${{ (c.amount * (coin.current_price - c.price)).toFixed(2) }}
-                </q-item-label>
-              </div>
-              <div v-else>
-                <q-item-label overline style="color:#ff7171;font-size:large">
-                  ${{ (c.amount * (coin.current_price - c.price)).toFixed(2) }}
-                </q-item-label>
-              </div>
-            </q-item-section>
-          </div>
-        </q-item>
-      </q-list>
     </q-list>
+
     <!-- FUNCTION BUTTON -->
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn fab icon="add" color="primary" v-on:click="show = !show" />
+    <q-page-sticky position="bottom-right" :offset="fabPos">
+      <q-fab
+        icon="add"
+        direction="up"
+        color="primary"
+        :disable="draggingFab"
+        v-touch-pan.prevent.mouse="moveFab"
+      >
+        <q-fab-action
+          color="negative"
+          icon="remove"
+          :disable="draggingFab"
+          v-on:click="deleteVisibility = !deleteVisibility"
+        />
+        <q-fab-action
+          @click="actionAddButton()"
+          color="positive"
+          icon="add"
+          :disable="draggingFab"
+        />
+      </q-fab>
     </q-page-sticky>
   </div>
 </template>
@@ -157,6 +188,7 @@
 <script>
 import Localbase from "localbase";
 import axios from "axios";
+import { date } from "quasar";
 let db = new Localbase("db");
 let _ = require("lodash");
 
@@ -170,6 +202,8 @@ export default {
       timer: "",
       //form visibility
       show: false,
+      //delete visibility
+      deleteVisibility: false,
       //get userDbdata
       currencies: [],
       someCurrencies: [],
@@ -179,10 +213,16 @@ export default {
       keyWord: [],
       //coins data
       coins: [],
-      dataCoins: [],
-      rasen: []
+      //action button
+      fabPos: [18, 18],
+      draggingFab: false,
+      // scroll UP
+      visible: false,
+      //items visib
+      activeItemId: 0
     };
   },
+  // METHODS //
   methods: {
     getCoinsData() {
       axios
@@ -237,7 +277,45 @@ export default {
           });
         });
     },
+    deleteCurrency(id) {
+      let index = this.currencies.findIndex(c => c.id === id);
+      db.collection("Currencies")
+        .doc({ id: id })
+        .delete();
+      this.currencies.splice(index, 1);
+      const seen = new Set();
+      this.someCurrencies = this.currencies.filter(el => {
+        const duplicate = seen.has(el.name);
+        seen.add(el.name);
+        return !duplicate;
+      });
+    },
+    //action add button > visibility and scroll up
+    actionAddButton() {
+      this.intervalId = setInterval(() => {
+        if (window.pageYOffset === 0) {
+          clearInterval(this.intervalId);
+        }
+        window.scroll(0, window.pageYOffset - 50);
+      }, 20);
+
+      this.visible = window.scrollY > 150;
+
+      this.show = !this.show;
+      this.deleteVisibility = false;
+    },
+    //api call every 10 seconds
+    startInterval: function() {
+      setInterval(() => {
+        this.getCoinsData();
+      }, 10000);
+    },
+    //filter keywords
     filterFn(val, update, abort) {
+      if (val.length < 2) {
+        abort();
+        return;
+      }
       update(() => {
         const needle = val.toLowerCase();
         this.keyWord = this.options.filter(
@@ -245,17 +323,18 @@ export default {
         );
       });
     },
-    startInterval: function() {
-      setInterval(() => {
-        this.getCoinsData();
-      }, 10000);
-    },
-    deleteCurrency(id) {
-      let index = this.currencies.find(c => c.id === id);
-      db.collection("Currencies")
-        .doc({ id: id })
-        .delete();
-      this.currencies.splice(index, 1);
+    //action button
+    moveFab(ev) {
+      this.draggingFab = ev.isFirst !== true && ev.isFinal !== true;
+
+      this.fabPos = [this.fabPos[0] - ev.delta.x, this.fabPos[1] - ev.delta.y];
+    }
+    // END METHODS //
+  },
+  //date filter
+  filters: {
+    niceDate(value) {
+      return date.formatDate(value, "MM/DD/YY");
     }
   },
   created() {
@@ -265,8 +344,11 @@ export default {
   mounted() {
     this.getCurrencys();
     this.getCoinsData();
+    window.addEventListener("scroll", this.scrollListener);
   },
-  updated() {},
+  beforeDestroy: function() {
+    window.removeEventListener("scroll", this.scrollListener);
+  },
   name: "PageIndex"
 };
 </script>
