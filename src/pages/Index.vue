@@ -64,14 +64,23 @@
         </div>
       </q-form>
     </transition-group>
+     <!-- ITEM  HEADER -->
     <q-list v-for="s in someCurrencies" :key="s.id">
       <div v-for="coin in coins" :key="coin.id">
         <q-expansion-item
           v-if="coin.name.toLowerCase() == s.name.toLowerCase()"
-          :label="s.name"
           default-opened
-          header-class="bg-secondary text-white rounded-borders"
+          header-class="bg-secondary text-white rounded-borders q-mb-md"
+
         >
+        <template v-slot:header>
+          <q-item-section>
+           {{s.name}}
+          </q-item-section>
+          <q-item-section class="absolute-right q-mr-xl">
+          <q-item-label class="text-h6"> USD {{coin.current_price}} </q-item-label>
+          </q-item-section>
+        </template>
           <q-list v-for="c in currencies" :key="c.id" separator class="q-ma-md">
             <!-- ITEM  -->
             <q-item
@@ -107,7 +116,7 @@
                   <q-item-label
                     class="q-ml-md"
                     overline
-                    style="color:#f2edd7;font-size:large"
+                    style="color:#f2edd7;font-size:medium"
                   >
                     {{ c.id | niceDate }}
                   </q-item-label>
@@ -123,6 +132,7 @@
                     color="primary"
                     class="q-pa-sm"
                     style="font-size:small"
+                     
                     >{{ c.amount }}</q-badge
                   >
                 </q-item-section>
@@ -134,7 +144,7 @@
                   <div v-if="c.amount * (coin.current_price - c.price) > 0">
                     <q-item-label
                       overline
-                      style="color:#9ede73;font-size:large"
+                      style="color:#9ede73;font-size:medium"
                     >
                       ${{
                         (c.amount * (coin.current_price - c.price)).toFixed(2)
@@ -308,7 +318,7 @@ export default {
     startInterval: function() {
       setInterval(() => {
         this.getCoinsData();
-      }, 10000);
+      }, 15000);
     },
     //filter keywords
     filterFn(val, update, abort) {
