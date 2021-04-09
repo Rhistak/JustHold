@@ -1,5 +1,6 @@
+
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md" v-if="currencies">
     <transition-group
       appear
       enter-active-class="animated fadeInDown"
@@ -130,9 +131,8 @@
                   <q-badge
                     rounded
                     color="primary"
-                    class="q-pa-sm"
-                    style="font-size:small"
-                     
+                    class="q-pa-xs"
+                    style="font-size:small" 
                     >{{ c.amount }}</q-badge
                   >
                 </q-item-section>
@@ -193,6 +193,9 @@
       </q-fab>
     </q-page-sticky>
   </div>
+  <div v-else>
+    ajajajajaj
+  </div>
 </template>
 
 <script>
@@ -200,7 +203,6 @@ import Localbase from "localbase";
 import axios from "axios";
 import { date } from "quasar";
 let db = new Localbase("db");
-let _ = require("lodash");
 
 export default {
   data() {
@@ -215,26 +217,24 @@ export default {
       //delete visibility
       deleteVisibility: false,
       //get userDbdata
-      currencies: [],
-      someCurrencies: [],
+      currencies: null,
+      someCurrencies: null,
       //search options
       options: [],
       //search keyword
       keyWord: [],
       //coins data
-      coins: [],
+      coins: null,
       //action button
       fabPos: [18, 18],
       draggingFab: false,
       // scroll UP
       visible: false,
-      //items visib
-      activeItemId: 0
     };
   },
   // METHODS //
   methods: {
-    getCoinsData() {
+   getCoinsData() {
       axios
         .get(
           "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h"
@@ -318,7 +318,7 @@ export default {
     startInterval: function() {
       setInterval(() => {
         this.getCoinsData();
-      }, 15000);
+      }, 1500);
     },
     //filter keywords
     filterFn(val, update, abort) {
@@ -348,12 +348,11 @@ export default {
     }
   },
   created() {
+    this.startInterval()
     this.getCurrencys();
-    this.startInterval();
   },
   mounted() {
-    this.getCurrencys();
-    this.getCoinsData();
+
     window.addEventListener("scroll", this.scrollListener);
   },
   beforeDestroy: function() {
