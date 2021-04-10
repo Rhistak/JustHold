@@ -1,6 +1,5 @@
-
 <template>
-  <div class="q-pa-md" v-if="currencies">
+  <div class="q-pa-md" v-if="coins">
     <transition-group
       appear
       enter-active-class="animated fadeInDown"
@@ -57,31 +56,33 @@
         />
         <div style="display: flex;flex-direction: column-reverse;">
           <q-btn
-            label="ADD"
+            label="add"
             type="submit"
             class="right"
+            icon="add_box"
             style="background-color:#e84545;color:#ececec"
           />
         </div>
       </q-form>
     </transition-group>
-     <!-- ITEM  HEADER -->
+    <!-- ITEM  HEADER -->
     <q-list v-for="s in someCurrencies" :key="s.id">
       <div v-for="coin in coins" :key="coin.id">
         <q-expansion-item
           v-if="coin.name.toLowerCase() == s.name.toLowerCase()"
           default-opened
           header-class="bg-secondary text-white rounded-borders q-mb-md"
-
         >
-        <template v-slot:header>
-          <q-item-section>
-           {{s.name}}
-          </q-item-section>
-          <q-item-section class="absolute-right q-mr-xl">
-          <q-item-label class="text-h6"> USD {{coin.current_price}} </q-item-label>
-          </q-item-section>
-        </template>
+          <template v-slot:header>
+            <q-item-section>
+              {{ s.name }}
+            </q-item-section>
+            <q-item-section class="absolute-right q-mr-xl">
+              <q-item-label class="text-h6">
+                USD {{ coin.current_price }}
+              </q-item-label>
+            </q-item-section>
+          </template>
           <q-list v-for="c in currencies" :key="c.id" separator class="q-ma-md">
             <!-- ITEM  -->
             <q-item
@@ -90,7 +91,6 @@
               v-if="c.name == s.name"
               :class="c.name"
             >
-              <!-- ITEM  -->
               <div v-for="coin in coins" :key="coin.id">
                 <!-- DELETE BUTTON -->
                 <q-item-section
@@ -132,7 +132,7 @@
                     rounded
                     color="primary"
                     class="q-pa-xs"
-                    style="font-size:small" 
+                    style="font-size:small"
                     >{{ c.amount }}</q-badge
                   >
                 </q-item-section>
@@ -151,10 +151,20 @@
                       }}
                     </q-item-label>
                   </div>
-                  <div v-else>
+                  <div v-else-if="c.amount * (coin.current_price - c.price) < 0">
                     <q-item-label
                       overline
                       style="color:#ff7171;font-size:large"
+                    >
+                      ${{
+                        (c.amount * (coin.current_price - c.price)).toFixed(2)
+                      }}
+                    </q-item-label>
+                  </div>
+                  <div v-else>
+                    <q-item-label
+                      overline
+                      style="color:#bbbbbb;font-size:large"
                     >
                       ${{
                         (c.amount * (coin.current_price - c.price)).toFixed(2)
@@ -193,9 +203,98 @@
       </q-fab>
     </q-page-sticky>
   </div>
-  <div v-else>
-    ajajajajaj
+  <!-- PRELOAD -->
+  <div v-else class="q-pa-md">
+    <!-- FORM -->
+      <q-form @submit="addCurrency" v-if="show" key="QForm" class="q-mb-md">
+        <q-select
+          filled
+          v-model="crypto"
+          placeholder="Select Crypto"
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"
+          :options="keyWord"
+          @filter="filterFn"
+          lazy-rules
+          label-color="white"
+          bg-color="accent"
+          :rules="[val => (val && val.length > 0) || 'Please type something']"
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No results
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+
+        <q-input
+          filled
+          type="text"
+          v-model="amount"
+          placeholder="Amount"
+          bg-color="accent"
+          lazy-rules
+          :rules="[
+            val => (val !== null && val !== '') || 'Please type something'
+          ]"
+        />
+        <q-input
+          filled
+          type="text"
+          v-model="price"
+          placeholder="Buy Price"
+          label-color="white"
+          bg-color="accent"
+          lazy-rules
+          :rules="[
+            val => (val !== null && val !== '') || 'Please type something'
+          ]"
+        />
+        <div style="display: flex;flex-direction: column-reverse;">
+          <q-btn
+            label="ADD"
+            type="submit"
+            class="right"
+            style="background-color:#e84545;color:#ececec"
+            icon="add_box"
+          />
+        </div>
+      </q-form>
+      <!-- $KELETON -->
+    <div v-for="c in someCurrencies" :key="c.id">
+      <q-card-section>
+        <q-skeleton type="QSlider" />
+      </q-card-section>
+    </div>
+    <!-- FUNCTION BUTTON -->
+    <q-page-sticky position="bottom-right" :offset="fabPos">
+      <q-fab
+        icon="add"
+        direction="up"
+        color="primary"
+        :disable="draggingFab"
+        v-touch-pan.prevent.mouse="moveFab"
+      >
+        <q-fab-action
+          color="negative"
+          icon="remove"
+          :disable="draggingFab"
+          v-on:click="deleteVisibility = !deleteVisibility"
+        />
+        <q-fab-action
+          @click="actionAddButton()"
+          color="positive"
+          icon="add"
+          :disable="draggingFab"
+        />
+      </q-fab>
+    </q-page-sticky>
   </div>
+  
 </template>
 
 <script>
@@ -229,12 +328,12 @@ export default {
       fabPos: [18, 18],
       draggingFab: false,
       // scroll UP
-      visible: false,
+      visible: false
     };
   },
   // METHODS //
   methods: {
-   getCoinsData() {
+    getCoinsData() {
       axios
         .get(
           "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h"
@@ -318,7 +417,7 @@ export default {
     startInterval: function() {
       setInterval(() => {
         this.getCoinsData();
-      }, 1500);
+      }, 2500);
     },
     //filter keywords
     filterFn(val, update, abort) {
@@ -348,13 +447,13 @@ export default {
     }
   },
   created() {
-    this.startInterval()
+    this.startInterval();
     this.getCurrencys();
   },
   mounted() {
-
     window.addEventListener("scroll", this.scrollListener);
   },
+
   beforeDestroy: function() {
     window.removeEventListener("scroll", this.scrollListener);
   },
