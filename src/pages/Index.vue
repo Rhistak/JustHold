@@ -66,16 +66,51 @@
         <div v-for="coin in coins" :key="coin.id">
           <q-expansion-item
             v-if="coin.name.toLowerCase() == s.name.toLowerCase()"
-            default-opened
+            default-closed
             header-class="bg-secondary text-white rounded-borders q-mb-md"
           >
+            <!-- ITEM  HEADER NAME -->
             <template v-slot:header>
               <q-item-section>
                 {{ s.name }}
               </q-item-section>
+              <!-- ITEM  HEADER PERCENT -->
+              <q-item-section class="absolute-center">
+                <div v-if="coin.price_change_percentage_24h > 0">
+                  <q-badge 
+                    rounded-borders
+                    color="positive"
+                    class="q-pa-xs"
+                    style="font-weight:bold"
+                  >
+                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
+                  </q-badge>
+                </div>
+                <div v-else-if="coin.price_change_percentage_24h < 0">
+                  <q-badge
+                    rounded-borders
+                    color="rgb(255, 113, 113)"
+                    class="q-pa-xs"
+                    style="font-size:small;font-weight:bold"
+                  >
+                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
+                  </q-badge>
+                </div>
+                <div v-else>
+                  <q-badge
+                    rounded-borders
+                    color="primary"
+                    class="q-pa-xs"
+                    style="font-size:small;font-weight:bold"
+                  >
+                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
+                  </q-badge>
+                </div>
+              </q-item-section>
+              <!-- ITEM  HEADER PRICE -->
               <q-item-section class="absolute-right q-mr-xl">
-                <q-item-label class="text-h6">
-                  USD {{ coin.current_price }}
+                <q-item-label style="margin:0;margin-left:.5em">
+                  ${{ coin.current_price }}
                 </q-item-label>
               </q-item-section>
             </template>
@@ -129,7 +164,7 @@
                     side
                     v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
                   >
-                    <q-badge rounded color="primary" class="q-pa-xs">{{
+                    <q-badge rounded color="warning" class="q-pa-sm">{{
                       c.amount
                     }}</q-badge>
                   </q-item-section>
@@ -256,9 +291,9 @@
       </div>
     </q-form>
     <!-- $KELETON -->
-    <div v-for="c in someCurrencies" :key="c.id">
-      <q-card-section>
-        <q-skeleton type="QSlider" />
+    <div v-for="c in someCurrencies" :key="c.id" class="q-mb-md">
+      <q-card-section style="margin:0;padding:0">
+        <q-skeleton type="QToolbar" style="background-color:#4b5d67" />
       </q-card-section>
     </div>
     <!-- FUNCTION BUTTON -->

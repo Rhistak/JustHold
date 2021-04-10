@@ -56,7 +56,13 @@ input:focus {
     flex-direction: column-reverse;
   }
 }
-
+// item header
+.q-item-section {
+  .q-badge {
+    font-size: x-large;
+    padding: 0.4em;
+  }
+}
 // items
 
 .q-item {
@@ -70,7 +76,7 @@ input:focus {
     font-size: x-large;
     .q-badge {
       font-size: x-large;
-      padding: .4em;
+      padding: 0.4em;
     }
   }
 }
@@ -86,16 +92,15 @@ input:focus {
 
 //action button
 
-.q-btn--fab{
+.q-btn--fab {
   @include medium() {
-    padding: .5em;
+    padding: 0.5em;
   }
-
 }
 
 .q-fab__actions .q-btn {
   @include medium() {
-    padding: .5em;
+    padding: 0.5em;
     margin-bottom: 1em;
   }
 }
