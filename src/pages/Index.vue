@@ -20,7 +20,7 @@
           lazy-rules
           label-color="white"
           bg-color="accent"
-          :rules="[val => (val && val.length > 0) || 'Please type something']"
+          :rules="[val => val && val.length > 0]"
         >
           <template v-slot:no-option>
             <q-item>
@@ -38,9 +38,7 @@
             placeholder="Amount"
             bg-color="accent"
             lazy-rules
-            :rules="[
-              val => (val !== null && val !== '') || 'Please type something'
-            ]"
+            :rules="[val => val !== null && val !== '']"
           />
           <q-input
             filled
@@ -50,9 +48,7 @@
             label-color="white"
             bg-color="accent"
             lazy-rules
-            :rules="[
-              val => (val !== null && val !== '') || 'Please type something'
-            ]"
+            :rules="[val => val !== null && val !== '']"
           />
         </div>
         <div class="btnDiv">
@@ -66,7 +62,7 @@
         <div v-for="coin in coins" :key="coin.id">
           <q-expansion-item
             v-if="coin.name.toLowerCase() == s.name.toLowerCase()"
-            default-closed
+            default-opened
             header-class="bg-secondary text-white rounded-borders q-mb-md"
           >
             <!-- ITEM  HEADER NAME -->
@@ -77,7 +73,7 @@
               <!-- ITEM  HEADER PERCENT -->
               <q-item-section class="absolute-center">
                 <div v-if="coin.price_change_percentage_24h > 0">
-                  <q-badge 
+                  <q-badge
                     rounded-borders
                     color="positive"
                     class="q-pa-xs"
@@ -91,7 +87,7 @@
                     rounded-borders
                     color="rgb(255, 113, 113)"
                     class="q-pa-xs"
-                    style="font-size:small;font-weight:bold"
+                    style="font-weight:bold"
                   >
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
@@ -101,7 +97,7 @@
                     rounded-borders
                     color="primary"
                     class="q-pa-xs"
-                    style="font-size:small;font-weight:bold"
+                    style="font-weight:bold"
                   >
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
@@ -156,6 +152,7 @@
                       style="color:#f2edd7"
                     >
                       {{ c.id | niceDate }}
+                      <!-- ${{c.price}} -->
                     </q-item-label>
                   </q-item-section>
                   <!-- COIN AMOUNT  -->
@@ -246,7 +243,7 @@
         lazy-rules
         label-color="white"
         bg-color="accent"
-        :rules="[val => (val && val.length > 0) || 'Please type something']"
+        :rules="[val => val && val.length > 0]"
       >
         <template v-slot:no-option>
           <q-item>
@@ -264,9 +261,7 @@
         placeholder="Amount"
         bg-color="accent"
         lazy-rules
-        :rules="[
-          val => (val !== null && val !== '') || 'Please type something'
-        ]"
+        :rules="[val => val !== null && val !== '']"
       />
       <q-input
         filled
@@ -276,9 +271,7 @@
         label-color="white"
         bg-color="accent"
         lazy-rules
-        :rules="[
-          val => (val !== null && val !== '') || 'Please type something'
-        ]"
+        :rules="[val => val !== null && val !== '']"
       />
       <div style="display: flex;flex-direction: column-reverse;">
         <q-btn
@@ -385,13 +378,14 @@ export default {
         price: this.price
       };
       db.collection("Currencies").add(newCurrency);
-      this.currencies.push(newCurrency);
+      this.currencies.unshift(newCurrency);
       const seen = new Set();
       this.someCurrencies = this.currencies.filter(el => {
         const duplicate = seen.has(el.name);
         seen.add(el.name);
         return !duplicate;
       });
+
       this.getCoinsData();
       this.show = false;
       this.crypto = "";
