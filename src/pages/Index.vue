@@ -63,7 +63,7 @@
           <q-expansion-item
             v-if="coin.name.toLowerCase() == s.name.toLowerCase()"
             default-opened
-            header-class="bg-secondary text-white rounded-borders q-mb-md"
+            header-class="bg-secondary text-white rounded-borders q-mb-sm"
           >
             <!-- ITEM  HEADER NAME -->
             <template v-slot:header>
@@ -110,107 +110,102 @@
                 </q-item-label>
               </q-item-section>
             </template>
-            <q-list
-              v-for="c in currencies"
-              :key="c.id"
-              separator
-              class="q-ma-md"
-            >
-              <!-- ITEM  -->
-              <q-item
-                style="background-color:#5d7290"
-                class="rounded-borders"
+            <q-list v-for="c in currencies" :key="c.id" separator>
+              <!-- SLIDE ITEM  -->
+              <q-slide-item
+                @right="deleteCurrency(c.id)"
+                dark
+                class="q-ma-sm rounded-borders"
+                right-color="primary"
                 v-if="c.name == s.name"
                 :class="c.name"
               >
-                <div v-for="coin in coins" :key="coin.id">
-                  <!-- DELETE BUTTON -->
-                  <q-item-section
-                    class="absolute-left"
-                    v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-                  >
-                    <q-item-label>
-                      <q-btn
-                        size="6px"
-                        round
-                        icon="clear"
-                        color="dark"
-                        style="top:-7px;left:-7px;position:absolute"
-                        v-if="deleteVisibility"
-                        @click.stop="deleteCurrency(c.id)"
-                      />
-                    </q-item-label>
-                  </q-item-section>
-                  <!-- COIN DATE  -->
-                  <q-item-section
-                    class="absolute-left"
-                    v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-                  >
-
-                    <q-item-label
-                      class="q-ml-md"
-                      overline
-                      style="color:#f2edd7"
-                      v-if="dateOrBuy === false" 
-                      v-on:click="dateOrBuy = !dateOrBuy"
+                <template v-slot:right>
+                  <q-icon name="delete" />
+                </template>
+                <!-- ITEM  -->
+                <q-item
+                  style="background-color:#5d7290"
+                  class="rounded-borders"
+                >
+                  <div v-for="coin in coins" :key="coin.id">
+                    <!-- COIN DATE  -->
+                    <q-item-section
+                      class="absolute-left"
+                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
                     >
-                      {{ c.id | niceDate }}
-                      <!-- ${{c.price}} -->
-                    </q-item-label>
+                      <q-item-label
+                        class="q-ml-md"
+                        overline
+                        style="color:#f2edd7"
+                        v-if="dateOrBuy === false"
+                        v-on:click="dateOrBuy = !dateOrBuy"
+                      >
+                        {{ c.id | niceDate }}
+                        <!-- ${{c.price}} -->
+                      </q-item-label>
 
-                        <q-item-label
-                      class="q-ml-md"
-                      overline
-                      style="color:#f2edd7"
-                      v-else
-                      v-on:click="dateOrBuy = !dateOrBuy"
+                      <q-item-label
+                        class="q-ml-md"
+                        overline
+                        style="color:#f2edd7"
+                        v-else
+                        v-on:click="dateOrBuy = !dateOrBuy"
+                      >
+                        ${{ c.price }}
+                        <!-- ${{c.price}} -->
+                      </q-item-label>
+                    </q-item-section>
+                    <!-- COIN AMOUNT  -->
+                    <q-item-section
+                      class="absolute-center"
+                      side
+                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
                     >
-                      ${{ c.price }}
-                      <!-- ${{c.price}} -->
-                    </q-item-label>
-
-                  </q-item-section>
-                  <!-- COIN AMOUNT  -->
-                  <q-item-section
-                    class="absolute-center"
-                    side
-                    v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-                  >
-                    <q-badge rounded color="warning" class="q-pa-sm">{{
-                      c.amount
-                    }}</q-badge>
-                  </q-item-section>
-                  <!-- COIN PRICE -->
-                  <q-item-section
-                    class="absolute-right q-mr-md"
-                    v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-                  >
-                    <div v-if="c.amount * (coin.current_price - c.price) > 0">
-                      <q-item-label overline style="color:#9ede73">
-                        ${{
-                          (c.amount * (coin.current_price - c.price)).toFixed(2)
-                        }}
-                      </q-item-label>
-                    </div>
-                    <div
-                      v-else-if="c.amount * (coin.current_price - c.price) < 0"
+                      <q-badge rounded color="warning" class="q-pa-sm">{{
+                        c.amount
+                      }}</q-badge>
+                    </q-item-section>
+                    <!-- COIN PRICE -->
+                    <q-item-section
+                      class="absolute-right q-mr-md"
+                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
                     >
-                      <q-item-label overline style="color:#ff7171">
-                        ${{
-                          (c.amount * (coin.current_price - c.price)).toFixed(2)
-                        }}
-                      </q-item-label>
-                    </div>
-                    <div v-else>
-                      <q-item-label overline style="color:#bbbbbb">
-                        ${{
-                          (c.amount * (coin.current_price - c.price)).toFixed(2)
-                        }}
-                      </q-item-label>
-                    </div>
-                  </q-item-section>
-                </div>
-              </q-item>
+                      <div v-if="c.amount * (coin.current_price - c.price) > 0">
+                        <q-item-label overline style="color:#9ede73">
+                          ${{
+                            (c.amount * (coin.current_price - c.price)).toFixed(
+                              2
+                            )
+                          }}
+                        </q-item-label>
+                      </div>
+                      <div
+                        v-else-if="
+                          c.amount * (coin.current_price - c.price) < 0
+                        "
+                      >
+                        <q-item-label overline style="color:#ff7171">
+                          ${{
+                            (c.amount * (coin.current_price - c.price)).toFixed(
+                              2
+                            )
+                          }}
+                        </q-item-label>
+                      </div>
+                      <div v-else>
+                        <q-item-label overline style="color:#bbbbbb">
+                          ${{
+                            (c.amount * (coin.current_price - c.price)).toFixed(
+                              2
+                            )
+                          }}
+                        </q-item-label>
+                      </div>
+                    </q-item-section>
+                  </div>
+                </q-item>
+              </q-slide-item>
             </q-list>
           </q-expansion-item>
         </div>
@@ -218,27 +213,9 @@
     </div>
 
     <!-- FUNCTION BUTTON -->
-    <q-page-sticky position="bottom-right" :offset="fabPos">
-      <q-fab
-        icon="add"
-        direction="up"
-        color="primary"
-        :disable="draggingFab"
-        v-touch-pan.prevent.mouse="moveFab"
-      >
-        <q-fab-action
-          color="negative"
-          icon="remove"
-          :disable="draggingFab"
-          v-on:click="deleteVisibility = !deleteVisibility"
-        />
-        <q-fab-action
-          @click="actionAddButton()"
-          color="positive"
-          icon="add"
-          :disable="draggingFab"
-        />
-      </q-fab>
+
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn fab icon="add" color="primary" @click="actionAddButton()" />
     </q-page-sticky>
   </div>
   <!-- PRELOAD -->
@@ -305,27 +282,8 @@
       </q-card-section>
     </div>
     <!-- FUNCTION BUTTON -->
-    <q-page-sticky position="bottom-right" :offset="fabPos">
-      <q-fab
-        icon="add"
-        direction="up"
-        color="primary"
-        :disable="draggingFab"
-        v-touch-pan.prevent.mouse="moveFab"
-      >
-        <q-fab-action
-          color="negative"
-          icon="remove"
-          :disable="draggingFab"
-          v-on:click="deleteVisibility = !deleteVisibility"
-        />
-        <q-fab-action
-          @click="actionAddButton()"
-          color="positive"
-          icon="add"
-          :disable="draggingFab"
-        />
-      </q-fab>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn fab icon="add" color="primary" @click="actionAddButton()" />
     </q-page-sticky>
   </div>
 </template>
@@ -363,7 +321,7 @@ export default {
       // scroll UP
       visible: false,
       // date or buyPrice visibility
-      dateOrBuy: false,
+      dateOrBuy: false
     };
   },
   // METHODS //
