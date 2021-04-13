@@ -146,14 +146,29 @@
                     class="absolute-left"
                     v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
                   >
+
                     <q-item-label
                       class="q-ml-md"
                       overline
                       style="color:#f2edd7"
+                      v-if="dateOrBuy === false" 
+                      v-on:click="dateOrBuy = !dateOrBuy"
                     >
                       {{ c.id | niceDate }}
                       <!-- ${{c.price}} -->
                     </q-item-label>
+
+                        <q-item-label
+                      class="q-ml-md"
+                      overline
+                      style="color:#f2edd7"
+                      v-else
+                      v-on:click="dateOrBuy = !dateOrBuy"
+                    >
+                      ${{ c.price }}
+                      <!-- ${{c.price}} -->
+                    </q-item-label>
+
                   </q-item-section>
                   <!-- COIN AMOUNT  -->
                   <q-item-section
@@ -346,7 +361,9 @@ export default {
       fabPos: [18, 18],
       draggingFab: false,
       // scroll UP
-      visible: false
+      visible: false,
+      // date or buyPrice visibility
+      dateOrBuy: false,
     };
   },
   // METHODS //
