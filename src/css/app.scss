@@ -1,8 +1,106 @@
+@mixin small {
+  @media only screen and (min-width: 360px) {
+    @content;
+  }
+}
+
+@mixin medium {
+  @media only screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media only screen and (min-width: 1440px) {
+    @content;
+  }
+}
+
 // app global css in SCSS form
 body {
-    background: #2b2e4a;
-    font-size: large;
+  background: #2b2e4a;
+  font-size: large;
+}
+textarea:focus,
+input:focus {
+  color: #ffffff;
+  font-size: large;
+}
+// todo esto tiene que ver con los input/placeholders
+.q-field--auto-height.q-field--labeled .q-field__native {
+  font-size: large;
+}
+// placeholder
+.q-select .q-field__input {
+  color: white;
+  font-size: large;
+}
+//placeholder
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  color: white;
+  font-size: large;
+}
+
+// form
+
+.q-form {
+  .q-btn {
+    background-color: $primary;
+    color: #ececec;
   }
-  textarea:focus, input:focus {
-    color: #ffffff;
+  .btnDiv {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+// item header
+.q-item-section {
+  .q-badge {
+    font-size: x-large;
+    padding: 0.4em;
+  }
+}
+// items
+
+.q-item {
+  @include small() {
+    font-size: medium;
+    .q-badge {
+      font-size: medium;
+    }
+  }
+  @include medium() {
+    font-size: x-large;
+    .q-badge {
+      font-size: x-large;
+      padding: 0.4em;
+    }
+  }
+}
+
+.q-item__label {
+  @include small() {
+    font-size: medium;
+  }
+  @include medium() {
+    font-size: x-large;
+  }
+}
+
+//action button
+
+.q-btn--fab {
+  @include medium() {
+    padding: 0.5em;
+  }
+}
+
+.q-fab__actions .q-btn {
+  @include medium() {
+    padding: 0.5em;
+    margin-bottom: 1em;
+  }
 }

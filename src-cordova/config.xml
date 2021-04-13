@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="test" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Quasar App</name>
+<widget id="com.company.Name" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Just Hold</name>
     <description>A Quasar Framework app</description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="ordizsa@gmail.com" href="instagram.com/sordiz">
+        Santiago Ordiz
     </author>
     <content src="index.html" />
     <access origin="*" />
