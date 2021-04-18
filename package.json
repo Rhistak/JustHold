@@ -1,9 +1,9 @@
 {
   "name": "hoid",
-  "version": "1.0.0",
-  "description": "A Quasar Framework app",
-  "productName": "Quasar App",
-  "author": "Santiago Ordiz <santiagoordiz@hotmail.com>",
+  "version": "1.0.1",
+  "description": "Just Hold!",
+  "productName": "Just Hold",
+  "author": "Santiago Ordiz <ordizsa@gmail.com>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
