@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
 @mixin small {
   @media only screen and (min-width: 360px) {
     @content;
@@ -16,10 +18,13 @@
   }
 }
 
+
+
 // app global css in SCSS form
 body {
   background: #2b2e4a;
   font-size: large;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 textarea:focus,
 input:focus {
@@ -33,7 +38,7 @@ input:focus {
 // placeholder
 .q-select .q-field__input {
   color: white;
-  font-size: large;
+  font-size: medium;
 }
 //placeholder
 .q-field__native,
@@ -41,7 +46,7 @@ input:focus {
 .q-field__suffix,
 .q-field__input {
   color: white;
-  font-size: large;
+  font-size: medium;
 }
 
 // form
@@ -71,6 +76,7 @@ input:focus {
     .q-badge {
       font-size: medium;
     }
+    min-height: 36px;
   }
   @include medium() {
     font-size: x-large;
@@ -104,3 +110,4 @@ input:focus {
     margin-bottom: 1em;
   }
 }
+

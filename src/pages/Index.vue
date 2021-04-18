@@ -8,12 +8,13 @@
       <!-- FORM -->
       <q-form @submit="addCurrency" v-if="show" key="QForm" class="q-mb-md">
         <q-select
+          square
           filled
           v-model="crypto"
-          placeholder="Select Crypto"
           use-input
           hide-selected
           fill-input
+          placeholder="Search Crypto"
           input-debounce="0"
           :options="keyWord"
           @filter="filterFn"
@@ -22,9 +23,12 @@
           bg-color="accent"
           :rules="[val => val && val.length > 0]"
         >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
           <template v-slot:no-option>
-            <q-item>
-              <q-item-section class="text-grey">
+            <q-item style="background-color:#5d7290">
+              <q-item-section class="text-white">
                 No results
               </q-item-section>
             </q-item>
@@ -32,27 +36,38 @@
         </q-select>
         <div class="inputDiv">
           <q-input
+            square
             filled
             type="text"
             v-model="amount"
-            placeholder="Amount"
             bg-color="accent"
+            placeholder="Amount"
+            label-color="white"
             lazy-rules
             :rules="[val => val !== null && val !== '']"
-          />
+          >
+          <template v-slot:prepend>
+            <q-icon name="pin" />
+          </template>
+          </q-input>
           <q-input
+            square
             filled
             type="text"
             v-model="price"
+            bg-color="accent"
             placeholder="Buy Price"
             label-color="white"
-            bg-color="accent"
             lazy-rules
             :rules="[val => val !== null && val !== '']"
-          />
+          >
+            <template v-slot:prepend>
+              <q-icon name="attach_money" />
+            </template>
+          </q-input>
         </div>
         <div class="btnDiv">
-          <q-btn label="add" type="submit" class="right" icon="add_box" />
+          <q-btn type="submit" label="Add" icon="add_box" />
         </div>
       </q-form>
     </transition-group>
@@ -221,60 +236,76 @@
   <!-- PRELOAD -->
   <div v-else class="q-pa-md">
     <!-- FORM -->
+    <transition-group
+      appear
+      enter-active-class="animated fadeInDown"
+      leave-active-class="animated slideOutUp"
+    >
     <q-form @submit="addCurrency" v-if="show" key="QForm" class="q-mb-md">
-      <q-select
-        filled
-        v-model="crypto"
-        placeholder="Select Crypto"
-        use-input
-        hide-selected
-        fill-input
-        input-debounce="0"
-        :options="keyWord"
-        @filter="filterFn"
-        lazy-rules
-        label-color="white"
-        bg-color="accent"
-        :rules="[val => val && val.length > 0]"
-      >
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No results
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-
-      <q-input
-        filled
-        type="text"
-        v-model="amount"
-        placeholder="Amount"
-        bg-color="accent"
-        lazy-rules
-        :rules="[val => val !== null && val !== '']"
-      />
-      <q-input
-        filled
-        type="text"
-        v-model="price"
-        placeholder="Buy Price"
-        label-color="white"
-        bg-color="accent"
-        lazy-rules
-        :rules="[val => val !== null && val !== '']"
-      />
-      <div style="display: flex;flex-direction: column-reverse;">
-        <q-btn
-          label="ADD"
-          type="submit"
-          class="right"
-          style="background-color:#e84545;color:#ececec"
-          icon="add_box"
-        />
-      </div>
-    </q-form>
+        <q-select
+          square
+          filled
+          v-model="crypto"
+          use-input
+          hide-selected
+          fill-input
+          placeholder="Search Crypto"
+          input-debounce="0"
+          :options="keyWord"
+          @filter="filterFn"
+          lazy-rules
+          label-color="white"
+          bg-color="accent"
+          :rules="[val => val && val.length > 0]"
+        >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+          <template v-slot:no-option>
+            <q-item style="background-color:#5d7290">
+              <q-item-section class="text-white">
+                No results
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+        <div class="inputDiv">
+          <q-input
+            square
+            filled
+            type="text"
+            v-model="amount"
+            bg-color="accent"
+            placeholder="Amount"
+            label-color="white"
+            lazy-rules
+            :rules="[val => val !== null && val !== '']"
+          >
+          <template v-slot:prepend>
+            <q-icon name="pin" />
+          </template>
+          </q-input>
+          <q-input
+            square
+            filled
+            type="text"
+            v-model="price"
+            bg-color="accent"
+            placeholder="Buy Price"
+            label-color="white"
+            lazy-rules
+            :rules="[val => val !== null && val !== '']"
+          >
+            <template v-slot:prepend>
+              <q-icon name="attach_money" />
+            </template>
+          </q-input>
+        </div>
+        <div class="btnDiv">
+          <q-btn type="submit" label="add" class="right" icon="add_box" />
+        </div>
+      </q-form>
+    </transition-group>
     <!-- $KELETON -->
     <div v-for="c in someCurrencies" :key="c.id" class="q-mb-md">
       <q-card-section style="margin:0;padding:0">
