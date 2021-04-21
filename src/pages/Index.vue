@@ -46,9 +46,9 @@
             lazy-rules
             :rules="[val => val !== null && val !== '']"
           >
-          <template v-slot:prepend>
-            <q-icon name="pin" />
-          </template>
+            <template v-slot:prepend>
+              <q-icon name="pin" />
+            </template>
           </q-input>
           <q-input
             square
@@ -241,7 +241,7 @@
       enter-active-class="animated fadeInDown"
       leave-active-class="animated slideOutUp"
     >
-    <q-form @submit="addCurrency" v-if="show" key="QForm" class="q-mb-md">
+      <q-form @submit="addCurrency" v-if="show" key="QForm" class="q-mb-md">
         <q-select
           square
           filled
@@ -281,9 +281,9 @@
             lazy-rules
             :rules="[val => val !== null && val !== '']"
           >
-          <template v-slot:prepend>
-            <q-icon name="pin" />
-          </template>
+            <template v-slot:prepend>
+              <q-icon name="pin" />
+            </template>
           </q-input>
           <q-input
             square
@@ -358,23 +358,85 @@ export default {
   // METHODS //
   methods: {
     getCoinsData() {
-      axios
-        .get(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h"
-        )
-        .then(response => {
-          this.options = response.data.map(e => e.name);
-          const seen = new Set();
-          this.someCurrencies.forEach(x => {
-            response.data.filter(e => {
-              if (e.name.toLowerCase() == x.name.toLowerCase()) {
-                seen.add(e);
-                return (this.coins = seen);
-              }
-            });
+      let one =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h";
+
+      let two =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=2&sparkline=false&price_change_percentage=1h";
+
+      let three =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=3&sparkline=false&price_change_percentage=1h";
+      let four =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=4&sparkline=false&price_change_percentage=1h";
+      let five =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=5&sparkline=false&price_change_percentage=1h";
+      let six =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=6&sparkline=false&price_change_percentage=1h";
+      let seven =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=7&sparkline=false&price_change_percentage=1h";
+      let eigth =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=8&sparkline=false&price_change_percentage=1h";
+      let nine =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=9&sparkline=false&price_change_percentage=1h";
+      let ten =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=10&sparkline=false&price_change_percentage=1h";
+      let eleven =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=11&sparkline=false&price_change_percentage=1h";
+      let twelve =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=12&sparkline=false&price_change_percentage=1h";
+
+      const requestOne = axios.get(one);
+      const requestTwo = axios.get(two);
+      const requestThree = axios.get(three);
+      const requestFour = axios.get(four);
+      const requestFive = axios.get(five);
+      const requestSix = axios.get(six);
+      const requestSeven = axios.get(seven);
+      const requestEigth = axios.get(eigth);
+      const requestNine = axios.get(nine);
+      const requestTen = axios.get(ten);
+      const requestEleven = axios.get(eleven);
+      const requestTwelve = axios.get(twelve);
+
+      Promise.all([
+        requestOne,
+        requestTwo,
+        requestThree,
+        requestFour,
+        requestFour,
+        requestFive,
+        requestSix,
+        requestSeven,
+        requestEigth,
+        requestNine,
+        requestTen,
+        requestEleven,
+        requestTwelve
+      ]).then(values => {
+        //let arrayNames = values.map(e => e.data);
+        let coins_array = values[0].data.concat(
+          values[1].data,
+          values[2].data,
+          values[3].data,
+          values[4].data,
+          values[5].data,
+          values[6].data,
+          values[7].data,
+          values[8].data,
+          values[9].data
+        );
+        this.options = coins_array.map(e => e.name);
+        const seen = new Set();
+        this.someCurrencies.forEach(x => {
+          coins_array.filter(e => {
+            if (e.name.toLowerCase() == x.name.toLowerCase()) {
+              seen.add(e);
+              return (this.coins = seen);
+            }
           });
-          console.log("api call");
         });
+        console.log("api call");
+      });
     },
     addCurrency() {
       let newCurrency = {
@@ -442,7 +504,7 @@ export default {
     startCoinsApiCall: function() {
       setInterval(() => {
         this.getCoinsData();
-      }, 2500);
+      }, 2300);
     },
     //filter keywords
     filterFn(val, update, abort) {
