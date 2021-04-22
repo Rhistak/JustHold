@@ -82,8 +82,9 @@
           >
             <!-- ITEM  HEADER NAME -->
             <template v-slot:header>
+
               <q-item-section>
-                {{ s.name }}
+                <p style="margin:0;padding:0">{{ s.name }}</p>
               </q-item-section>
               <!-- ITEM  HEADER PERCENT -->
               <q-item-section class="absolute-center">
@@ -92,7 +93,7 @@
                     rounded-borders
                     color="positive"
                     class="q-pa-xs"
-                    style="font-weight:bold"
+                    
                   >
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
@@ -102,7 +103,7 @@
                     rounded-borders
                     color="rgb(255, 113, 113)"
                     class="q-pa-xs"
-                    style="font-weight:bold"
+                    
                   >
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
@@ -112,7 +113,7 @@
                     rounded-borders
                     color="primary"
                     class="q-pa-xs"
-                    style="font-weight:bold"
+                    
                   >
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
