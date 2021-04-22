@@ -232,6 +232,14 @@
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="primary" @click="actionAddButton()" />
     </q-page-sticky>
+      <q-page-sticky position="bottom-left" :offset="[18, 18]">
+     <p style="color:white;font-size:medium;margin:0">
+     Not finding your Crypto?
+     </p>
+     <a style="color:white;font-size:medium" href="https://play.google.com/store/apps/details?id=sordiz.justhold.full">
+     Try the Full Version
+     </a>
+    </q-page-sticky>
   </div>
   <!-- PRELOAD -->
   <div v-else class="q-pa-md">
@@ -374,6 +382,7 @@ export default {
             });
           });
           console.log("api call");
+          console.log(this.options)
         });
     },
     addCurrency() {
