@@ -82,19 +82,13 @@
           >
             <!-- ITEM  HEADER NAME -->
             <template v-slot:header>
-
               <q-item-section>
                 <p style="margin:0;padding:0">{{ s.name }}</p>
               </q-item-section>
               <!-- ITEM  HEADER PERCENT -->
               <q-item-section class="absolute-center">
                 <div v-if="coin.price_change_percentage_24h > 0">
-                  <q-badge
-                    rounded-borders
-                    color="positive"
-                    class="q-pa-xs"
-                    
-                  >
+                  <q-badge rounded-borders color="positive" class="q-pa-xs">
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
                 </div>
@@ -103,18 +97,12 @@
                     rounded-borders
                     color="rgb(255, 113, 113)"
                     class="q-pa-xs"
-                    
                   >
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
                 </div>
                 <div v-else>
-                  <q-badge
-                    rounded-borders
-                    color="primary"
-                    class="q-pa-xs"
-                    
-                  >
+                  <q-badge rounded-borders color="primary" class="q-pa-xs">
                     {{ coin.price_change_percentage_24h.toFixed(2) }}%
                   </q-badge>
                 </div>
@@ -323,6 +311,26 @@
 <script>
 import Localbase from "localbase";
 import axios from "axios";
+import {
+  r1,
+  r2,
+  r3,
+  r4,
+  r5,
+  r6,
+  r7,
+  r8,
+  r9,
+  r10,
+  r11,
+  r12,
+  r13,
+  r14,
+  r15,
+  r16,
+  r17,
+  r18
+} from "src/components/axios";
 import { date } from "quasar";
 let db = new Localbase("db");
 
@@ -359,45 +367,24 @@ export default {
   // METHODS //
   methods: {
     getCoinsData() {
-      let one =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h";
-
-      let two =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=2&sparkline=false&price_change_percentage=1h";
-
-      let three =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=3&sparkline=false&price_change_percentage=1h";
-      let four =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=4&sparkline=false&price_change_percentage=1h";
-      let five =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=5&sparkline=false&price_change_percentage=1h";
-      let six =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=6&sparkline=false&price_change_percentage=1h";
-      let seven =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=7&sparkline=false&price_change_percentage=1h";
-      let eigth =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=8&sparkline=false&price_change_percentage=1h";
-      let nine =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=9&sparkline=false&price_change_percentage=1h";
-      let ten =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=10&sparkline=false&price_change_percentage=1h";
-      let eleven =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=11&sparkline=false&price_change_percentage=1h";
-      let twelve =
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=12&sparkline=false&price_change_percentage=1h";
-
-      const requestOne = axios.get(one);
-      const requestTwo = axios.get(two);
-      const requestThree = axios.get(three);
-      const requestFour = axios.get(four);
-      const requestFive = axios.get(five);
-      const requestSix = axios.get(six);
-      const requestSeven = axios.get(seven);
-      const requestEigth = axios.get(eigth);
-      const requestNine = axios.get(nine);
-      const requestTen = axios.get(ten);
-      const requestEleven = axios.get(eleven);
-      const requestTwelve = axios.get(twelve);
+      const requestOne = axios.get(r1);
+      const requestTwo = axios.get(r2);
+      const requestThree = axios.get(r3);
+      const requestFour = axios.get(r4);
+      const requestFive = axios.get(r5);
+      const requestSix = axios.get(r6);
+      const requestSeven = axios.get(r7);
+      const requestEigth = axios.get(r8);
+      const requestNine = axios.get(r9);
+      const requestTen = axios.get(r10);
+      const requestEleven = axios.get(r11);
+      const requestTwelve = axios.get(r12);
+      const req13 = axios.get(r13);
+      const req14 = axios.get(r14);
+      const req15 = axios.get(r15);
+      const req16 = axios.get(r16);
+      const req17 = axios.get(r17);
+      const req18 = axios.get(r18);
 
       Promise.all([
         requestOne,
@@ -412,7 +399,13 @@ export default {
         requestNine,
         requestTen,
         requestEleven,
-        requestTwelve
+        requestTwelve,
+        req13,
+        req14,
+        req15,
+        req16,
+        req17,
+        req18
       ]).then(values => {
         //let arrayNames = values.map(e => e.data);
         let coins_array = values[0].data.concat(
@@ -424,7 +417,15 @@ export default {
           values[6].data,
           values[7].data,
           values[8].data,
-          values[9].data
+          values[9].data,
+          values[10].data,
+          values[11].data,
+          values[12].data,
+          values[13].data,
+          values[14].data,
+          values[15].data,
+          values[16].data,
+          values[17].data,
         );
         this.options = coins_array.map(e => e.name);
         const seen = new Set();
