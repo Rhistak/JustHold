@@ -65,6 +65,32 @@
               <q-icon name="attach_money" />
             </template>
           </q-input>
+          <!-- DATE INPUT -->
+          <q-input
+            filled
+            v-model="date"
+            mask="date"
+            :rules="['date']"
+            bg-color="accent"
+            square
+            placeholder="Buy Date"
+          >
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy
+                  ref="qDateProxy"
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date v-model="date" today-btn>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
         </div>
         <div class="btnDiv">
           <q-btn type="submit" label="Add" icon="add_box" />
@@ -145,7 +171,7 @@
                         v-if="dateOrBuy === false"
                         v-on:click="dateOrBuy = !dateOrBuy"
                       >
-                        {{ c.id | niceDate }}
+                        {{ c.date }}
                         <!-- ${{c.price}} -->
                       </q-item-label>
 
@@ -343,6 +369,8 @@ export default {
       crypto: "",
       amount: "",
       price: "",
+      date: date.formatDate(Date.now(), "YYYY/MM/DD"),
+      //timer
       timer: "",
       //form visibility
       show: false,
@@ -427,7 +455,8 @@ export default {
         id: Date.now(),
         name: this.crypto,
         amount: this.amount,
-        price: this.price
+        price: this.price,
+        date: this.date
       };
       db.collection("Currencies").add(newCurrency);
       this.currencies.unshift(newCurrency);
