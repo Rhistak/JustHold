@@ -329,7 +329,9 @@ import {
   r15,
   r16,
   r17,
-  r18
+  r18,
+  r19,
+  r20
 } from "src/components/axios";
 import { date } from "quasar";
 let db = new Localbase("db");
@@ -367,45 +369,31 @@ export default {
   // METHODS //
   methods: {
     getCoinsData() {
-      const requestOne = axios.get(r1);
-      const requestTwo = axios.get(r2);
-      const requestThree = axios.get(r3);
-      const requestFour = axios.get(r4);
-      const requestFive = axios.get(r5);
-      const requestSix = axios.get(r6);
-      const requestSeven = axios.get(r7);
-      const requestEigth = axios.get(r8);
-      const requestNine = axios.get(r9);
-      const requestTen = axios.get(r10);
-      const requestEleven = axios.get(r11);
-      const requestTwelve = axios.get(r12);
-      const req13 = axios.get(r13);
-      const req14 = axios.get(r14);
-      const req15 = axios.get(r15);
-      const req16 = axios.get(r16);
-      const req17 = axios.get(r17);
-      const req18 = axios.get(r18);
-
+      const req1 = axios.get(r1);
+      const req2 = axios.get(r2);
+      const req3 = axios.get(r3);
+      const req4 = axios.get(r4);
+      const req5 = axios.get(r5);
+      const req6 = axios.get(r6);
+      const req7 = axios.get(r7);
+      const req8 = axios.get(r8);
+      const req9 = axios.get(r9);
+      const req10 = axios.get(r10);
+      const req11 = axios.get(r11);
+      const req12 = axios.get(r12);
       Promise.all([
-        requestOne,
-        requestTwo,
-        requestThree,
-        requestFour,
-        requestFour,
-        requestFive,
-        requestSix,
-        requestSeven,
-        requestEigth,
-        requestNine,
-        requestTen,
-        requestEleven,
-        requestTwelve,
-        req13,
-        req14,
-        req15,
-        req16,
-        req17,
-        req18
+        req1,
+        req2,
+        req3,
+        req4,
+        req5,
+        req6,
+        req7,
+        req8,
+        req9,
+        req10,
+        req11,
+        req12
       ]).then(values => {
         //let arrayNames = values.map(e => e.data);
         let coins_array = values[0].data.concat(
@@ -419,13 +407,7 @@ export default {
           values[8].data,
           values[9].data,
           values[10].data,
-          values[11].data,
-          values[12].data,
-          values[13].data,
-          values[14].data,
-          values[15].data,
-          values[16].data,
-          values[17].data,
+          values[11].data
         );
         this.options = coins_array.map(e => e.name);
         const seen = new Set();
