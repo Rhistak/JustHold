@@ -38,12 +38,13 @@
           <q-input
             square
             filled
-            type="text"
+            type="number"
             v-model="amount"
             bg-color="accent"
             placeholder="Amount"
             label-color="white"
             lazy-rules
+            step="0.000000001"
             :rules="[val => val !== null && val !== '']"
           >
             <template v-slot:prepend>
@@ -53,7 +54,8 @@
           <q-input
             square
             filled
-            type="text"
+            type="number"
+            step="0.000000001"
             v-model="price"
             bg-color="accent"
             placeholder="Buy Price"
