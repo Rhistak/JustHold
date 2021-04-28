@@ -253,6 +253,14 @@
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="primary" @click="actionAddButton()" />
     </q-page-sticky>
+    <q-page-sticky position="bottom-left" :offset="[18, 18]">
+     <p style="color:white;font-size:medium;margin:0">
+     Not finding your Crypto?
+     </p>
+     <a style="color:white;font-size:medium" href="https://play.google.com/store/apps/details?id=sordiz.justhold.full">
+     Try the Full Version
+     </a>
+    </q-page-sticky>
   </div>
   <!-- PRELOAD -->
   <div v-else class="q-pa-md">
@@ -294,7 +302,8 @@
           <q-input
             square
             filled
-            type="text"
+            type="number"
+            step="0.000000001"
             v-model="amount"
             bg-color="accent"
             placeholder="Amount"
@@ -309,7 +318,8 @@
           <q-input
             square
             filled
-            type="text"
+            type="number"
+            step="0.000000001"
             v-model="price"
             bg-color="accent"
             placeholder="Buy Price"
@@ -366,34 +376,20 @@
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="primary" @click="actionAddButton()" />
     </q-page-sticky>
+    <q-page-sticky position="bottom-left" :offset="[18, 18]">
+     <p style="color:white;font-size:medium;margin:0">
+     Not finding your Crypto?
+     </p>
+     <a style="color:white;font-size:medium" href="https://play.google.com/store/apps/details?id=sordiz.justhold.full">
+     Try the Full Version
+     </a>
+    </q-page-sticky>
   </div>
 </template>
 
 <script>
 import Localbase from "localbase";
 import axios from "axios";
-import {
-  r1,
-  r2,
-  r3,
-  r4,
-  r5,
-  r6,
-  r7,
-  r8,
-  r9,
-  r10,
-  r11,
-  r12,
-  r13,
-  r14,
-  r15,
-  r16,
-  r17,
-  r18,
-  r19,
-  r20
-} from "src/components/axios";
 import { date } from "quasar";
 let db = new Localbase("db");
 
@@ -432,58 +428,24 @@ export default {
   // METHODS //
   methods: {
     getCoinsData() {
-      const req1 = axios.get(r1);
-      const req2 = axios.get(r2);
-      const req3 = axios.get(r3);
-      const req4 = axios.get(r4);
-      const req5 = axios.get(r5);
-      const req6 = axios.get(r6);
-      const req7 = axios.get(r7);
-      const req8 = axios.get(r8);
-      const req9 = axios.get(r9);
-      const req10 = axios.get(r10);
-      const req11 = axios.get(r11);
-      const req12 = axios.get(r12);
-      Promise.all([
-        req1,
-        req2,
-        req3,
-        req4,
-        req5,
-        req6,
-        req7,
-        req8,
-        req9,
-        req10,
-        req11,
-        req12
-      ]).then(values => {
-        //let arrayNames = values.map(e => e.data);
-        let coins_array = values[0].data.concat(
-          values[1].data,
-          values[2].data,
-          values[3].data,
-          values[4].data,
-          values[5].data,
-          values[6].data,
-          values[7].data,
-          values[8].data,
-          values[9].data,
-          values[10].data,
-          values[11].data
-        );
-        this.options = coins_array.map(e => e.name);
-        const seen = new Set();
-        this.someCurrencies.forEach(x => {
-          coins_array.filter(e => {
-            if (e.name.toLowerCase() == x.name.toLowerCase()) {
-              seen.add(e);
-              return (this.coins = seen);
-            }
+      axios
+        .get(
+          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h"
+        )
+        .then(response => {
+          this.options = response.data.map(e => e.name);
+          const seen = new Set();
+          this.someCurrencies.forEach(x => {
+            response.data.filter(e => {
+              if (e.name.toLowerCase() == x.name.toLowerCase()) {
+                seen.add(e);
+                return (this.coins = seen);
+              }
+            });
           });
+          console.log("api call");
+          console.log(this.options);
         });
-        console.log("api call");
-      });
     },
     addCurrency() {
       let newCurrency = {
