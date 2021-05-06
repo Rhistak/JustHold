@@ -1,7 +1,7 @@
 {
-  "name": "sordiz.justhold.full",
+  "name": "sordiz.just.hold",
   "displayName": "Just Hold",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Just Hold!.",
   "main": "index.js",
   "scripts": {

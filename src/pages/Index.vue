@@ -117,29 +117,6 @@
               <q-item-section>
                 <p style="margin:0;padding:0">{{ s.name }}</p>
               </q-item-section>
-              <!-- ITEM  HEADER PERCENT -->
-              <q-item-section class="absolute-center">
-                <div v-if="coin.price_change_percentage_24h > 0">
-                  <q-badge rounded-borders color="positive" class="q-pa-xs">
-                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
-                  </q-badge>
-                </div>
-                <div v-else-if="coin.price_change_percentage_24h < 0">
-                  <q-badge
-                    rounded-borders
-                    color="rgb(255, 113, 113)"
-                    class="q-pa-xs"
-                  >
-                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
-                  </q-badge>
-                </div>
-                <div v-else>
-                  <q-badge rounded-borders color="primary" class="q-pa-xs">
-                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
-                  </q-badge>
-                </div>
-              </q-item-section>
-              <!-- ITEM  HEADER PRICE -->
               <q-item-section class="absolute-right q-mr-xl">
                 <q-item-label style="margin:0;margin-left:.5em">
                   ${{ coin.current_price }}
@@ -160,87 +137,64 @@
                   <q-icon name="delete" />
                 </template>
                 <!-- ITEM  -->
-                <q-item
+                <q-expansion-item
                   style="background-color:#5d7290"
                   class="rounded-borders"
+                  dense
+                  dense-toggle
+                  expand-icon-class="text-white"
                 >
-                  <div v-for="coin in coins" :key="coin.id">
-                    <!-- COIN DATE  -->
-                    <q-item-section
-                      class="absolute-left"
-                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-                    >
-                      <q-item-label
-                        class="q-ml-md"
-                        overline
-                        style="color:#f2edd7"
-                        v-if="dateOrBuy === false"
-                        v-on:click="dateOrBuy = !dateOrBuy"
-                      >
-                        {{ c.date }}
-                        <!-- ${{c.price}} -->
-                      </q-item-label>
-
-                      <q-item-label
-                        class="q-ml-md"
-                        overline
-                        style="color:#f2edd7"
-                        v-else
-                        v-on:click="dateOrBuy = !dateOrBuy"
-                      >
-                        ${{ c.price }}
-                        <!-- ${{c.price}} -->
+                  <template v-slot:header>
+                    <q-item-section>
+                      <p style="margin:0;padding:0">Binance</p>
+                    </q-item-section>
+                    <q-item-section class="absolute-right q-mr-xl">
+                      <q-item-label style="margin:0;margin-left:.5em">
+                        Profit
                       </q-item-label>
                     </q-item-section>
-                    <!-- COIN AMOUNT  -->
-                    <q-item-section
-                      class="absolute-center"
-                      side
-                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-                    >
-                      <q-badge rounded color="warning" class="q-pa-sm">{{
-                        c.amount
-                      }}</q-badge>
-                    </q-item-section>
-                    <!-- COIN PRICE -->
-                    <q-item-section
-                      class="absolute-right q-mr-md"
-                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
-                    >
-                      <div v-if="c.amount * (coin.current_price - c.price) > 0">
-                        <q-item-label overline style="color:#9ede73">
-                          ${{
-                            (c.amount * (coin.current_price - c.price)).toFixed(
-                              2
-                            )
-                          }}
-                        </q-item-label>
-                      </div>
-                      <div
-                        v-else-if="
-                          c.amount * (coin.current_price - c.price) < 0
-                        "
-                      >
-                        <q-item-label overline style="color:#ff7171">
-                          ${{
-                            (c.amount * (coin.current_price - c.price)).toFixed(
-                              2
-                            )
-                          }}
-                        </q-item-label>
-                      </div>
-                      <div v-else>
-                        <q-item-label overline style="color:#bbbbbb">
-                          ${{
-                            (c.amount * (coin.current_price - c.price)).toFixed(
-                              2
-                            )
-                          }}
-                        </q-item-label>
-                      </div>
-                    </q-item-section>
-                  </div>
-                </q-item>
+                  </template>
+                  <q-card>
+                    <q-list bordered separator style="background-color:#5d7290">
+                      <q-item id="itemsInfo">
+                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
+                          Buy date:
+                        </q-item-section>
+                        <q-item-section> </q-item-section>
+                        <q-item-section side class="text-white text-subtitle2 text-bold"
+                          >2021-03-12</q-item-section
+                        >
+                      </q-item>
+                      <q-item id="itemsInfo">
+                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
+                          Buy price:
+                        </q-item-section>
+                        <q-item-section> </q-item-section>
+                        <q-item-section side class="text-white text-subtitle2 text-bold"
+                          >$0.93</q-item-section
+                        >
+                      </q-item>
+                      <q-item id="itemsInfo">
+                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
+                          Amount:
+                        </q-item-section>
+                        <q-item-section> </q-item-section>
+                        <q-item-section side class="text-white text-subtitle2 text-bold"
+                          >1087</q-item-section
+                        >
+                      </q-item>
+                      <q-item id="itemsInfo">
+                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
+                          Exchange:
+                        </q-item-section>
+                        <q-item-section> </q-item-section>
+                        <q-item-section side class="text-white text-subtitle2 text-bold"
+                          >Binance</q-item-section
+                        >
+                      </q-item>
+                    </q-list>
+                  </q-card>
+                </q-expansion-item>
               </q-slide-item>
             </q-list>
           </q-expansion-item>
