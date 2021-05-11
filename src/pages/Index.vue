@@ -140,56 +140,141 @@
                 <q-expansion-item
                   style="background-color:#5d7290"
                   class="rounded-borders"
-                  dense
-                  dense-toggle
-                  expand-icon-class="text-white"
+                  expand-icon-class="text-blue-grey-13 "
                 >
                   <template v-slot:header>
-                    <q-item-section>
-                      <p style="margin:0;padding:0">Binance</p>
+                    <q-item-section
+                      class="q-mr-md"
+                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
+                    >
+                      <div v-if="c.amount * (coin.current_price - c.price) > 0">
+                        <q-item-label overline style="color:#9ede73">
+                          ${{
+                            (c.amount * (coin.current_price - c.price)).toFixed(
+                              2
+                            )
+                          }}
+                        </q-item-label>
+                      </div>
+                      <div
+                        v-else-if="
+                          c.amount * (coin.current_price - c.price) < 0
+                        "
+                      >
+                        <q-item-label overline style="color:#ff7171">
+                          ${{
+                            (c.amount * (coin.current_price - c.price)).toFixed(
+                              2
+                            )
+                          }}
+                        </q-item-label>
+                      </div>
+                      <div v-else>
+                        <q-item-label overline style="color:#bbbbbb">
+                          ${{
+                            (c.amount * (coin.current_price - c.price)).toFixed(
+                              2
+                            )
+                          }}
+                        </q-item-label>
+                      </div>
                     </q-item-section>
-                    <q-item-section class="absolute-right q-mr-xl">
-                      <q-item-label style="margin:0;margin-left:.5em">
-                        Profit
-                      </q-item-label>
+                    <q-item-section
+                      class="absolute-right q-mr-xl"
+                      side
+                      v-if="coin.name.toLowerCase() == c.name.toLowerCase()"
+                    >
+                      <div v-if="c.amount * (coin.current_price - c.price) > 0">
+                        <q-badge
+                          rounded-borders
+                          color="positive"
+                          class="q-pa-xs"
+                        >
+                          {{
+                            (
+                              (c.amount * (coin.current_price - c.price)) /
+                              10
+                            ).toFixed(2)
+                          }}%
+                        </q-badge>
+                      </div>
+                      <div
+                        v-else-if="
+                          c.amount * (coin.current_price - c.price) < 0
+                        "
+                      >
+                        <q-badge
+                          rounded-borders
+                          color="rgb(255, 113, 113)"
+                          class="q-pa-xs"
+                        >
+                          {{
+                            (
+                              (c.amount * (coin.current_price - c.price)) /
+                              10
+                            ).toFixed(2)
+                          }}%
+                        </q-badge>
+                      </div>
+                      <div v-else>
+                        <q-badge
+                          rounded-borders
+                          color="primary"
+                          class="q-pa-xs"
+                        >
+                          {{
+                            (
+                              (c.amount * (coin.current_price - c.price)) /
+                              10
+                            ).toFixed(2)
+                          }}%
+                        </q-badge>
+                      </div>
                     </q-item-section>
+                    <!-- COIN PRICE -->
                   </template>
                   <q-card>
                     <q-list bordered separator style="background-color:#5d7290">
                       <q-item id="itemsInfo">
-                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
+                        <q-item-section
+                          avatar
+                          class="text-blue-grey-2  text-subtitle2 text-bold"
+                        >
                           Buy date:
                         </q-item-section>
                         <q-item-section> </q-item-section>
-                        <q-item-section side class="text-white text-subtitle2 text-bold"
-                          >2021-03-12</q-item-section
+                        <q-item-section
+                          side
+                          class="text-white text-subtitle2 text-bold"
+                          >{{ c.date }}</q-item-section
                         >
                       </q-item>
                       <q-item id="itemsInfo">
-                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
+                        <q-item-section
+                          avatar
+                          class="text-blue-grey-2  text-subtitle2 text-bold"
+                        >
                           Buy price:
                         </q-item-section>
                         <q-item-section> </q-item-section>
-                        <q-item-section side class="text-white text-subtitle2 text-bold"
-                          >$0.93</q-item-section
+                        <q-item-section
+                          side
+                          class="text-white text-subtitle2 text-bold"
+                          >${{ c.price }}</q-item-section
                         >
                       </q-item>
                       <q-item id="itemsInfo">
-                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
+                        <q-item-section
+                          avatar
+                          class="text-blue-grey-2  text-subtitle2 text-bold"
+                        >
                           Amount:
                         </q-item-section>
                         <q-item-section> </q-item-section>
-                        <q-item-section side class="text-white text-subtitle2 text-bold"
-                          >1087</q-item-section
-                        >
-                      </q-item>
-                      <q-item id="itemsInfo">
-                        <q-item-section avatar class="text-blue-grey-2  text-subtitle2 text-bold">
-                          Exchange:
-                        </q-item-section>
-                        <q-item-section> </q-item-section>
-                        <q-item-section side class="text-white text-subtitle2 text-bold"
-                          >Binance</q-item-section
+                        <q-item-section
+                          side
+                          class="text-white text-subtitle2 text-bold"
+                          >{{ c.amount }}</q-item-section
                         >
                       </q-item>
                     </q-list>
@@ -202,11 +287,15 @@
       </q-list>
     </div>
 
+   
     <!-- FUNCTION BUTTON -->
 
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn fab icon="add" color="primary" @click="actionAddButton()" />
+      <q-btn push fab icon="add" color="primary" @click="actionAddButton()" />
     </q-page-sticky>
+    <!-- <q-page-sticky position="bottom-left" :offset="[18, 18]">
+      <q-btn push fab icon="info" color="dark" padding="xs" />
+    </q-page-sticky> -->
   </div>
   <!-- PRELOAD -->
   <div v-else class="q-pa-md">
